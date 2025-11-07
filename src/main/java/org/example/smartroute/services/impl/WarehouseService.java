@@ -7,10 +7,12 @@ import org.example.smartroute.entities.models.Warehouse;
 import org.example.smartroute.mappers.WarehouseMapper;
 import org.example.smartroute.repositories.WarehouseRepository;
 import org.example.smartroute.services.IWarehouseService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class WarehouseService implements IWarehouseService {
 
     private final WarehouseRepository repository;

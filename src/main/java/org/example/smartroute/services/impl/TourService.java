@@ -3,14 +3,19 @@ package org.example.smartroute.services.impl;
 import org.example.smartroute.entities.DTO.tour.CreateTourDto;
 import org.example.smartroute.entities.DTO.tour.TourDto;
 import org.example.smartroute.entities.DTO.tour.UpdateTourDto;
+import org.example.smartroute.entities.enums.TourStatus;
 import org.example.smartroute.entities.models.Delivery;
 import org.example.smartroute.entities.models.Tour;
+import org.example.smartroute.events.TourCompletedEvent;
 import org.example.smartroute.mappers.TourMapper;
+import org.example.smartroute.optimizier.OptimizerFactory;
+import org.example.smartroute.optimizier.TourOptimizer;
 import org.example.smartroute.repositories.DeliveryRepository;
 import org.example.smartroute.repositories.TourRepository;
 import org.example.smartroute.services.ITourService;
 import org.example.smartroute.utils.DistanceCalculator;
 import org.example.smartroute.utils.TourUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,24 +29,24 @@ public class TourService implements ITourService {
     private final TourRepository tourRepository;
     private final DeliveryRepository deliveryRepository;
     private final TourMapper tourMapper;
-    private final NearestNeighborOptimizer nearestNeighborOptimizer;
-    private final ClarkeWrightOptimizer clarkeWrightOptimizer;
     private final DistanceCalculator distanceCalculator;
+    private final OptimizerFactory optimizerFactory;
+    private final ApplicationEventPublisher eventPublisher;
 
     public TourService(
             TourRepository tourRepository,
             DeliveryRepository deliveryRepository,
             TourMapper tourMapper,
-            NearestNeighborOptimizer nearestNeighborOptimizer,
-            ClarkeWrightOptimizer clarkeWrightOptimizer,
-            DistanceCalculator distanceCalculator
+            DistanceCalculator distanceCalculator,
+            OptimizerFactory optimizerFactory ,
+            ApplicationEventPublisher eventPublisher
     ) {
         this.tourRepository = tourRepository;
         this.deliveryRepository = deliveryRepository;
         this.tourMapper = tourMapper;
-        this.nearestNeighborOptimizer = nearestNeighborOptimizer;
-        this.clarkeWrightOptimizer = clarkeWrightOptimizer;
         this.distanceCalculator = distanceCalculator;
+        this.optimizerFactory = optimizerFactory;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -51,7 +56,7 @@ public class TourService implements ITourService {
             tour.getDeliveries().forEach(d -> d.setTour(tour));
         }
 
-        if (tour.getAlgorithmType() != null && tour.getDeliveries() != null && !tour.getDeliveries().isEmpty()) {
+        if (tour.getDeliveries() != null && !tour.getDeliveries().isEmpty()) {
             List<Delivery> optimized = optimizeList(tour);
             tour.setDeliveries(optimized);
         }
@@ -67,7 +72,6 @@ public class TourService implements ITourService {
 
         existing.setDate(dto.date());
         existing.setTotalDistance(dto.totalDistance());
-        existing.setAlgorithmType(dto.algorithmType());
         existing.setWarehouse(dto.warehouse());
         existing.setVehicle(dto.vehicle());
 
@@ -77,10 +81,19 @@ public class TourService implements ITourService {
             existing.getDeliveries().forEach(d -> d.setTour(existing));
         }
 
-        if (existing.getAlgorithmType() != null && existing.getDeliveries() != null && !existing.getDeliveries().isEmpty()) {
+        if (existing.getDeliveries() != null && !existing.getDeliveries().isEmpty()) {
             List<Delivery> optimized = optimizeList(existing);
             existing.setDeliveries(optimized);
         }
+
+
+        if (dto.status() != null) {
+            existing.setStatus(dto.status());
+            if (dto.status() == TourStatus.COMPLETED) {
+                eventPublisher.publishEvent(new TourCompletedEvent(this, existing));
+            }
+        }
+
 
         Tour updated = tourRepository.save(existing);
         return tourMapper.toDto(updated);
@@ -131,16 +144,16 @@ public class TourService implements ITourService {
         tourRepository.save(tour);
     }
 
+    @Override
     public TourDto addDeliveriesToTour(Long tourId, List<Long> deliveryIds) {
         Tour tour = tourRepository.findById(tourId)
                 .orElseThrow(() -> new RuntimeException("Tour not found"));
 
         List<Delivery> deliveries = deliveryRepository.findAllById(deliveryIds);
-
         deliveries.forEach(d -> d.setTour(tour));
         tour.getDeliveries().addAll(deliveries);
 
-        if (tour.getAlgorithmType() != null && !tour.getDeliveries().isEmpty()) {
+        if (!tour.getDeliveries().isEmpty()) {
             List<Delivery> optimized = optimizeList(tour);
             tour.setDeliveries(optimized);
         }
@@ -150,12 +163,9 @@ public class TourService implements ITourService {
     }
 
     private List<Delivery> optimizeList(Tour tour) {
-        if (tour.getAlgorithmType() == null) return tour.getDeliveries();
+        TourOptimizer optimizer = optimizerFactory.getOptimizer(null);
 
-        List<Delivery> optimized = switch (tour.getAlgorithmType()) {
-            case NEAREST_NEIGHBOR -> nearestNeighborOptimizer.optimizerTour(tour);
-            case CLARKE_WRIGHT -> clarkeWrightOptimizer.optimizerTour(tour);
-        };
+        List<Delivery> optimized = optimizer.optimizerTour(tour);
 
         double totalDistance = TourUtils.calculateTotalDistance(
                 tour.getWarehouse(),
