@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.example.smartroute.entities.enums.DeliveryStatus;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,6 +43,13 @@ public class Delivery {
     @NotBlank
     @Column(nullable = false)
     private String timeWindow;
+
+    @Column(nullable = false)
+    private LocalDateTime plannedTime;
+
+    @Column(nullable = false)
+    private LocalDateTime actualTime;
+
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
