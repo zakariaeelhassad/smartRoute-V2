@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.smartroute.entities.enums.AlgorithmType;
+import org.example.smartroute.entities.enums.TourStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,9 +26,6 @@ public class Tour {
 
     private Double totalDistance;
 
-    @Enumerated(EnumType.STRING)
-    private AlgorithmType algorithmType;
-
     @ManyToOne
     @JoinColumn(name = "warehouse_id" , nullable = false)
     private Warehouse warehouse;
@@ -40,4 +38,7 @@ public class Tour {
     @JsonManagedReference
     private List<Delivery> deliveries;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TourStatus status = TourStatus.PLANNED;
 }

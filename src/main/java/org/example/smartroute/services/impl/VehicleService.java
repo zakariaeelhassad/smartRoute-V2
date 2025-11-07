@@ -7,10 +7,12 @@
     import org.example.smartroute.mappers.VehicleMapper;
     import org.example.smartroute.repositories.VehicleRepository;
     import org.example.smartroute.services.IVehicleService;
+    import org.springframework.stereotype.Service;
 
     import java.util.List;
     import java.util.stream.Collectors;
 
+    @Service
     public class VehicleService implements IVehicleService {
 
         private final VehicleRepository repository;

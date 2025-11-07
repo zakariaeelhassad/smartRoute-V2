@@ -1,4 +1,4 @@
-package org.example.smartroute.services;
+package org.example.smartroute.optimizier;
 
 import org.example.smartroute.entities.models.Delivery;
 import org.example.smartroute.entities.models.Tour;

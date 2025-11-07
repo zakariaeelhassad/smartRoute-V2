@@ -7,10 +7,12 @@ import org.example.smartroute.entities.models.Delivery;
 import org.example.smartroute.mappers.DeliveryMapper;
 import org.example.smartroute.repositories.DeliveryRepository;
 import org.example.smartroute.services.IDeliveryService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class DeliveryService implements IDeliveryService {
 
     private final DeliveryRepository repository;

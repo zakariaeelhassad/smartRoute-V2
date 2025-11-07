@@ -6,7 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.example.smartroute.entities.enums.DeliveryStatus;
-import org.example.smartroute.entities.enums.VehicleType;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -43,6 +44,13 @@ public class Delivery {
     @Column(nullable = false)
     private String timeWindow;
 
+    @Column(nullable = false)
+    private LocalDateTime plannedTime;
+
+    @Column(nullable = false)
+    private LocalDateTime actualTime;
+
+
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
@@ -51,4 +59,8 @@ public class Delivery {
     @JsonBackReference
     private Tour tour;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    @JsonBackReference
+    private Customer customer;
 }

@@ -1,15 +1,19 @@
-package org.example.smartroute.services.impl;
+package org.example.smartroute.optimizier.impl;
 
 import org.example.smartroute.entities.models.Delivery;
 import org.example.smartroute.entities.models.Tour;
 import org.example.smartroute.entities.models.Warehouse;
-import org.example.smartroute.services.TourOptimizer;
+import org.example.smartroute.optimizier.TourOptimizer;
 import org.example.smartroute.utils.DistanceCalculator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Service
+@ConditionalOnProperty(name = "optimizer.type", havingValue = "nearest")
 public class NearestNeighborOptimizer implements TourOptimizer {
 
     private final DistanceCalculator distanceCalculator;

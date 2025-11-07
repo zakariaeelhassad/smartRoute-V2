@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+optimizer:
+  type: nearest

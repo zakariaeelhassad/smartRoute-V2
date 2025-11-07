@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- 🧍‍♂️ Table CUSTOMER -->
+    <changeSet id="5" author="zakariae">
+<!--        Création table Customer — v2.0 — Zakariae — 2025-11-07-->
+        <createTable tableName="customer">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)" />
+            <column name="address" type="VARCHAR(255)" />
+            <column name="latitude" type="DOUBLE PRECISION" />
+            <column name="longitude" type="DOUBLE PRECISION" />
+            <column name="preferred_time_slot" type="VARCHAR(50)" />
+        </createTable>
+        <rollback><dropTable tableName="customer"/></rollback>
+    </changeSet>
+
+    <!-- 🗂️ Table DELIVERY_HISTORY -->
+    <changeSet id="6" author="zakariae">
+<!--        Création table DeliveryHistory — v2.0 — Zakariae — 2025-11-07 -->
+        <createTable tableName="delivery_history">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="delivery_id" type="BIGINT"/>
+            <column name="customer_id" type="BIGINT"/>
+            <column name="tour_id" type="BIGINT"/>
+            <column name="planned_time" type="TIMESTAMP"/>
+            <column name="actual_time" type="TIMESTAMP"/>
+            <column name="delay" type="BIGINT"/>
+            <column name="day_of_week" type="VARCHAR(20)"/>
+        </createTable>
+        <rollback><dropTable tableName="delivery_history"/></rollback>
+    </changeSet>
+
+    <!-- 🔗 Foreign keys -->
+    <changeSet id="6.1" author="zakariae">
+<!--        FK DeliveryHistory → Delivery-->
+        <addForeignKeyConstraint
+                baseTableName="delivery_history"
+                baseColumnNames="delivery_id"
+                constraintName="fk_delivery_history_delivery"
+                referencedTableName="delivery"
+                referencedColumnNames="id"/>
+        <rollback><dropForeignKeyConstraint baseTableName="delivery_history" constraintName="fk_delivery_history_delivery"/></rollback>
+    </changeSet>
+
+    <changeSet id="6.2" author="zakariae">
+<!--        FK DeliveryHistory → Customer-->
+        <addForeignKeyConstraint
+                baseTableName="delivery_history"
+                baseColumnNames="customer_id"
+                constraintName="fk_delivery_history_customer"
+                referencedTableName="customer"
+                referencedColumnNames="id"/>
+        <rollback><dropForeignKeyConstraint baseTableName="delivery_history" constraintName="fk_delivery_history_customer"/></rollback>
+    </changeSet>
+
+    <changeSet id="6.3" author="zakariae">
+<!--        FK DeliveryHistory → Tour-->
+        <addForeignKeyConstraint
+                baseTableName="delivery_history"
+                baseColumnNames="tour_id"
+                constraintName="fk_delivery_history_tour"
+                referencedTableName="tour"
+                referencedColumnNames="id"/>
+        <rollback><dropForeignKeyConstraint baseTableName="delivery_history" constraintName="fk_delivery_history_tour"/></rollback>
+    </changeSet>
+
+</databaseChangeLog>
