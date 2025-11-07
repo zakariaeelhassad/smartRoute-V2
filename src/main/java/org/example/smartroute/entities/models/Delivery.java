@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.example.smartroute.entities.enums.DeliveryStatus;
-import org.example.smartroute.entities.enums.VehicleType;
 
 @Data
 @NoArgsConstructor
@@ -51,4 +50,8 @@ public class Delivery {
     @JsonBackReference
     private Tour tour;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    @JsonBackReference
+    private Customer customer;
 }
