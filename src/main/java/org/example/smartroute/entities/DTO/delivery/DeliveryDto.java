@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Positive;
 import org.example.smartroute.entities.enums.DeliveryStatus;
 import org.example.smartroute.entities.models.Tour;
 
+import java.time.LocalDateTime;
+
 public record DeliveryDto(
         @NotNull Long id,
         @NotBlank String address,
@@ -14,6 +16,8 @@ public record DeliveryDto(
         @NotNull @Positive Double weight,
         @NotNull @Positive Double volume,
         @NotBlank String timeWindow,
+        LocalDateTime plannedTime,
+        LocalDateTime actualTime,
         @NotNull DeliveryStatus deliveryStatus,
         @NotNull Tour tour
 ) {

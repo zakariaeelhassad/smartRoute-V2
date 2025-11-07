@@ -15,7 +15,6 @@ import java.util.List;
 public record CreateTourDto(
         @NotNull LocalDate date ,
         @NotBlank Double totalDistance,
-        @NotNull AlgorithmType algorithmType ,
         @NotNull Warehouse warehouse,
         @NotNull Vehicle vehicle,
         @NotNull List<Delivery> deliveries
