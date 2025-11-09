@@ -1,9 +1,12 @@
 package org.example.smartroute.services;
 
-import org.example.smartroute.entities.DTO.DeliveryHistory.CreateDeliveryHistoryDto;
-import org.example.smartroute.entities.DTO.DeliveryHistory.DeliveryHistoryDto;
-import org.example.smartroute.entities.DTO.DeliveryHistory.UpdateDeliveryHistoryDto;
+import org.example.smartroute.entities.DTO.deliveryHistory.CreateDeliveryHistoryDto;
+import org.example.smartroute.entities.DTO.deliveryHistory.DeliveryHistoryDto;
+import org.example.smartroute.entities.DTO.deliveryHistory.UpdateDeliveryHistoryDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 public interface IDeliveryHistoryService {
@@ -12,4 +15,7 @@ public interface IDeliveryHistoryService {
     void delete(Long id);
     DeliveryHistoryDto getById(Long id);
     List<DeliveryHistoryDto> getAll();
+    Page<DeliveryHistoryDto> getAllPage(Pageable pageable);
+    Page<DeliveryHistoryDto> findByDayOfWeek(DayOfWeek dayOfWeek, Pageable pageable);
+    Page<DeliveryHistoryDto> findByCustomerName(String name, Pageable pageable);
 }

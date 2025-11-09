@@ -7,6 +7,8 @@ import org.example.smartroute.entities.models.Delivery;
 import org.example.smartroute.mappers.DeliveryMapper;
 import org.example.smartroute.repositories.DeliveryRepository;
 import org.example.smartroute.services.IDeliveryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,4 +67,19 @@ public class DeliveryService implements IDeliveryService {
                 .map(deliveryMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    public Page<DeliveryDto> getAllPage(Pageable pageable) {
+        return repository.findAll(pageable).map(deliveryMapper::toDto);
+    }
+
+    public Page<DeliveryDto> searchByAddress(String address, Pageable pageable) {
+        return repository.findByAddressContainingIgnoreCase(address, pageable)
+                .map(deliveryMapper::toDto);
+    }
+
+    public Page<DeliveryDto> searchByStatus(String status, Pageable pageable) {
+        return repository.findByDeliveryStatus(status, pageable)
+                .map(deliveryMapper::toDto);
+    }
+
 }

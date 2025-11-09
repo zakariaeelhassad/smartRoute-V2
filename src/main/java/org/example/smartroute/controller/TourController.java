@@ -1,4 +1,4 @@
-package org.example.smartroute.Controller;
+package org.example.smartroute.controller;
 
 import jakarta.validation.Valid;
 import org.example.smartroute.entities.DTO.tour.CreateTourDto;

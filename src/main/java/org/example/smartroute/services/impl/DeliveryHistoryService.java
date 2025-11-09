@@ -1,8 +1,8 @@
 package org.example.smartroute.services.impl;
 
-import org.example.smartroute.entities.DTO.DeliveryHistory.CreateDeliveryHistoryDto;
-import org.example.smartroute.entities.DTO.DeliveryHistory.DeliveryHistoryDto;
-import org.example.smartroute.entities.DTO.DeliveryHistory.UpdateDeliveryHistoryDto;
+import org.example.smartroute.entities.DTO.deliveryHistory.CreateDeliveryHistoryDto;
+import org.example.smartroute.entities.DTO.deliveryHistory.DeliveryHistoryDto;
+import org.example.smartroute.entities.DTO.deliveryHistory.UpdateDeliveryHistoryDto;
 import org.example.smartroute.entities.models.Customer;
 import org.example.smartroute.entities.models.Delivery;
 import org.example.smartroute.entities.models.DeliveryHistory;
@@ -13,9 +13,12 @@ import org.example.smartroute.repositories.DeliveryRepository;
 import org.example.smartroute.repositories.DeliveryHistoryRepository;
 import org.example.smartroute.repositories.TourRepository;
 import org.example.smartroute.services.IDeliveryHistoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -104,4 +107,20 @@ public class DeliveryHistoryService implements IDeliveryHistoryService {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<DeliveryHistoryDto> getAllPage(Pageable pageable) {
+        return deliveryHistoryRepository.findAll(pageable).map(mapper::toDto);
+    }
+
+    public Page<DeliveryHistoryDto> findByDayOfWeek(DayOfWeek dayOfWeek, Pageable pageable) {
+        return deliveryHistoryRepository.findByDayOfWeek(dayOfWeek, pageable)
+                .map(mapper::toDto);
+    }
+
+    public Page<DeliveryHistoryDto> findByCustomerName(String name, Pageable pageable) {
+        return deliveryHistoryRepository.findByCustomerNameContaining(name, pageable)
+                .map(mapper::toDto);
+    }
+
 }
