@@ -17,5 +17,4 @@ public interface IDeliveryService {
     List<DeliveryDto> getAll();
     Page<DeliveryDto> getAllPage(Pageable pageable);
     Page<DeliveryDto> searchByAddress(String address, Pageable pageable);
-    Page<DeliveryDto> searchByStatus(String status, Pageable pageable);
 }
