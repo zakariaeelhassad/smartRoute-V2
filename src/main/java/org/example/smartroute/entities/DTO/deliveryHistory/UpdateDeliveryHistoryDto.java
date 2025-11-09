@@ -1,4 +1,4 @@
-package org.example.smartroute.entities.DTO.DeliveryHistory;
+package org.example.smartroute.entities.DTO.deliveryHistory;
 
 import lombok.Data;
 import java.time.DayOfWeek;

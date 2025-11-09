@@ -1,6 +1,6 @@
 package org.example.smartroute.listeners;
 
-import org.example.smartroute.entities.DTO.DeliveryHistory.CreateDeliveryHistoryDto;
+import org.example.smartroute.entities.DTO.deliveryHistory.CreateDeliveryHistoryDto;
 import org.example.smartroute.entities.models.Delivery;
 import org.example.smartroute.entities.models.Tour;
 import org.example.smartroute.events.TourCompletedEvent;

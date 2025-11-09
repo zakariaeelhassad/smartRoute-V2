@@ -1,10 +1,12 @@
-package org.example.smartroute.Controller;
+package org.example.smartroute.controller;
 
 import jakarta.validation.Valid;
 import org.example.smartroute.entities.DTO.delivery.CreateDeliveryDto;
 import org.example.smartroute.entities.DTO.delivery.UpdateDeliveryDto;
 import org.example.smartroute.entities.DTO.delivery.DeliveryDto;
 import org.example.smartroute.services.IDeliveryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,4 +53,17 @@ public class DeliveryController {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<DeliveryDto>> getDeliveries(Pageable pageable) {
+        return ResponseEntity.ok(service.getAllPage(pageable));
+    }
+
+    @GetMapping("/search/address")
+    public ResponseEntity<Page<DeliveryDto>> searchByAddress(
+            @RequestParam String address,
+            Pageable pageable) {
+        return ResponseEntity.ok(service.searchByAddress(address, pageable));
+    }
+
 }
