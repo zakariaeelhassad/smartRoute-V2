@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="zakariae">
+        <createTable tableName="warehouses">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latitude" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="longitude" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="opening_time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="closing_time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback><dropTable tableName="warehouses"/></rollback>
+    </changeSet>
+
+    <changeSet id="2" author="zakariae">
+        <createTable tableName="vehicles">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="capacity_weight" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="capacity_volume" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="max_deliveries" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vehicle_type" type="VARCHAR(50)"/>
+        </createTable>
+        <rollback><dropTable tableName="vehicles"/></rollback>
+    </changeSet>
+
+    <changeSet id="3" author="zakariae">
+        <createTable tableName="tours">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="date" type="DATE" />
+            <column name="total_distance" type="DOUBLE PRECISION" />
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vehicle_id" type="BIGINT" />
+            <column name="warehouse_id" type="BIGINT" />
+        </createTable>
+        <rollback><dropTable tableName="tours"/></rollback>
+    </changeSet>
+
+    <changeSet id="3.1" author="zakariae">
+        <addForeignKeyConstraint
+                baseTableName="tours"
+                baseColumnNames="vehicle_id"
+                constraintName="fk_tour_vehicle"
+                referencedTableName="vehicles"
+                referencedColumnNames="id"/>
+        <rollback><dropForeignKeyConstraint baseTableName="tours" constraintName="fk_tour_vehicle"/></rollback>
+    </changeSet>
+
+    <changeSet id="3.2" author="zakariae">
+        <addForeignKeyConstraint
+                baseTableName="tours"
+                baseColumnNames="warehouse_id"
+                constraintName="fk_tour_warehouse"
+                referencedTableName="warehouses"
+                referencedColumnNames="id"/>
+        <rollback><dropForeignKeyConstraint baseTableName="tours" constraintName="fk_tour_warehouse"/></rollback>
+    </changeSet>
+
+    <changeSet id="4" author="zakariae">
+        <createTable tableName="deliveries">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latitude" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="longitude" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="weight" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="volume" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time_window" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="planned_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actual_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="delivery_status" type="VARCHAR(50)" />
+            <column name="tour_id" type="BIGINT" />
+            <column name="customer_id" type="BIGINT" />
+        </createTable>
+        <rollback><dropTable tableName="deliveries"/></rollback>
+    </changeSet>
+
+    <changeSet id="4.1" author="zakariae">
+        <addForeignKeyConstraint
+                baseTableName="deliveries"
+                baseColumnNames="tour_id"
+                constraintName="fk_delivery_tour"
+                referencedTableName="tours"
+                referencedColumnNames="id"/>
+        <rollback><dropForeignKeyConstraint baseTableName="deliveries" constraintName="fk_delivery_tour"/></rollback>
+    </changeSet>
+
+</databaseChangeLog>

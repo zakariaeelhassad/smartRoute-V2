@@ -4,8 +4,10 @@ import org.example.smartroute.entities.DTO.delivery.CreateDeliveryDto;
 import org.example.smartroute.entities.DTO.delivery.UpdateDeliveryDto;
 import org.example.smartroute.entities.DTO.delivery.DeliveryDto;
 import org.example.smartroute.entities.models.Delivery;
+import org.example.smartroute.entities.models.Tour;
 import org.example.smartroute.mappers.DeliveryMapper;
 import org.example.smartroute.repositories.DeliveryRepository;
+import org.example.smartroute.repositories.TourRepository;
 import org.example.smartroute.services.IDeliveryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,16 +21,25 @@ public class DeliveryService implements IDeliveryService {
 
     private final DeliveryRepository repository;
     private final DeliveryMapper deliveryMapper;
+    private final TourRepository tourRepository;
 
-    public DeliveryService(DeliveryRepository repository, DeliveryMapper deliveryMapper) {
+
+    public DeliveryService(DeliveryRepository repository, DeliveryMapper deliveryMapper , TourRepository tourRepository) {
         this.repository = repository;
         this.deliveryMapper = deliveryMapper;
+        this.tourRepository = tourRepository ;
     }
 
     @Override
     public DeliveryDto create(CreateDeliveryDto deliveryDto) {
         Delivery delivery = deliveryMapper.toEntity(deliveryDto);
+
+        Tour tour = tourRepository.findById(deliveryDto.tourId())
+                .orElseThrow(() -> new RuntimeException("Tour not found with id " + deliveryDto.tourId()));
+        delivery.setTour(tour);
+
         Delivery savedDelivery = repository.save(delivery);
+
         return deliveryMapper.toDto(savedDelivery);
     }
 

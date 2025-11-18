@@ -2,10 +2,16 @@ spring:
   datasource:
     url: jdbc:h2:mem:smartroute
     driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    username: postgres
+    password: zakaria
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: none
     show-sql: true
+
+  liquibase:
+    change-log: db/changelog/db.changelog.master.xml
+
+optimizer:
+  default: ai

@@ -19,6 +19,6 @@ public record CreateDeliveryDto(
         LocalDateTime plannedTime,
         LocalDateTime actualTime,
         @NotNull DeliveryStatus deliveryStatus,
-        @NotNull Tour tour
+        @NotNull Long tourId
 ) {
 }

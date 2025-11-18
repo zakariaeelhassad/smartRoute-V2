@@ -3,7 +3,7 @@ package org.example.smartroute.util;
 import org.example.smartroute.entities.models.Delivery;
 import org.example.smartroute.entities.models.Tour;
 import org.example.smartroute.entities.models.Warehouse;
-import org.example.smartroute.services.impl.NearestNeighborOptimizer;
+import org.example.smartroute.optimizier.impl.NearestNeighborOptimizer;
 import org.example.smartroute.utils.DistanceCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

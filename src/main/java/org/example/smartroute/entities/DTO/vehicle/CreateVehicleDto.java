@@ -7,9 +7,6 @@ import org.example.smartroute.entities.enums.VehicleType;
 
 public record CreateVehicleDto(
         @NotBlank String name ,
-        @NotNull @Positive Double capacityWeight,
-        @NotNull @Positive Double capacityVolume,
-        @NotNull @Positive Integer maxDeliveries,
         @NotNull VehicleType vehicleType
 ) {
 }

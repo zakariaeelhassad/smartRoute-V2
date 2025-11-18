@@ -4,8 +4,15 @@ spring:
     username: postgres
     password: zakaria
     driver-class-name: org.postgresql.Driver
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
     show-sql: false
+
+  liquibase:
+    change-log: db/changelog/db.changelog-master.xml
+
+optimizer:
+  default: ai

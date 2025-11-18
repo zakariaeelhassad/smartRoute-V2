@@ -1,9 +1,23 @@
 spring:
   profiles:
     active: dev
+
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        enabled: true
+        options:
+          model: gemma3:4b
+          temperature: 0.3
+
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: true
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+
 optimizer:
-  type: nearest
+  default: ai
